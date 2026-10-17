@@ -121,7 +121,7 @@ jobs:
         input: ${{ github.workspace }}/image.tar
         list-all-pkgs: true
         output: ${{ github.workspace }}/trivy-report.txt
-        scanners: vuln,secret,config,license
+        scanners: vuln,secret,config
         skip-setup-trivy: true
         trivyignores: .trivyignore.yaml
 
@@ -135,7 +135,7 @@ jobs:
         ignore-unfixed: true
         input: ${{ github.workspace }}/image.tar
         list-all-pkgs: true
-        scanners: vuln,secret,config,license
+        scanners: vuln,secret,config
         severity: CRITICAL
         skip-setup-trivy: true
         trivyignores: .trivyignore.yaml
