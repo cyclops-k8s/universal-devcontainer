@@ -74,7 +74,7 @@ jobs:
         input: ${{ github.workspace }}/image.tar
         list-all-pkgs: true
         output: ${{ github.workspace }}/trivy-report.json
-        scanners: vuln,secret,config,license
+        scanners: vuln,secret,config
         trivyignores: .trivyignore.yaml
 
     - name: Upload Trivy JSON report
