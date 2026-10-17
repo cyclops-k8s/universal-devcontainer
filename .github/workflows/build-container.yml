@@ -16,7 +16,7 @@ on:
 env:
   CONTEXT: .
   DOCKERFILE: ./Dockerfile
-  IMAGE_NAME: ansible-kubernetes-devcontainer
+  IMAGE_NAME: universal-devcontainer
   IMAGE_REPOSITORY: cyclops-k8s
   REGISTRY: quay.io
 
