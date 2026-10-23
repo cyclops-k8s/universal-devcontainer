@@ -34,7 +34,13 @@ RUN apt-get update \
             yarnpkg \
             eslint \
             node-typescript \
+            buildah \
+            skopeo \
     && apt-get distclean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /entrypoint
 
 USER vscode
+
+CMD ["sleep", "infinity"]
+ENTRYPOINT [""]
