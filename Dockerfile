@@ -35,6 +35,10 @@ RUN apt-get update \
             eslint \
             node-typescript \
     && apt-get distclean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /entrypoint
 
 USER vscode
+
+CMD ["sleep", "infinity"]
+ENTRYPOINT [""]
