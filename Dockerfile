@@ -72,11 +72,9 @@ RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs \
 # trivy
 COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
 COPY --from=trivy /contrib/*.tpl /contrib/
+COPY --from=trivy --chown=vscode:vscode /root/.trivy /home/vscode/.trivy
 
 USER vscode
-
-# trivy
-COPY --from=trivy --chown=vscode:vscode /root/.trivy /home/vscode/.trivy
 
 CMD ["sleep", "infinity"]
 ENTRYPOINT [""]
