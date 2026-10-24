@@ -1,3 +1,5 @@
+FROM docker.io/library/node:latest AS node
+
 FROM quay.io/cyclops-k8s/ansible-kubernetes-devcontainer:latest
 
 USER root
@@ -37,26 +39,34 @@ RUN apt-get update \
             # Build tools
             buildah \
             skopeo \
-            # For nodejs
-            libatomic1 \
     && apt-get distclean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /entrypoint
 
-USER vscode
+# node files
+COPY --from=node /usr/local/bin/node /usr/local/bin/
+COPY --from=node /usr/local/include/node /usr/local/include/node
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node /usr/local/share/doc/node /usr/local/share/doc/node
+COPY --from=node /usr/local/share/man/man1/node.1 /usr/local/share/man/man1/
 
-# Install most recent node version
-ENV NVM_DIR="$HOME/.nvm"
-RUN curl -q -sI https://github.com/nvm-sh/nvm/releases/latest | \
-      grep -i location | \
-      grep -oP 'tag/\K[^[:space:]\r\n]+' | \
-      xargs -I {} curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{}/install.sh | \
-      bash \
-    && source "${NVM_DIR}/nvm.sh" \
-    && nvm install --latest-npm \
-    && npm config set allow-scripts=yarn --location=user \
-    && npm install -g eslint typescript yarn \
-    && rm -rf "${HOME}/.nvm/.cache" "${HOME}/.npm" /tmp/*
+# node - partially based on https://github.com/nodejs/docker-node/blob/main/26/trixie/Dockerfile
+RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npx \
+    && npm config set allow-scripts=yarn \
+    && npm install --global eslint typescript yarn \
+    # tests to ensure everything runs
+    && eslint --version \
+    && node --version \
+    && nodejs --version \
+    && npm --version \
+    && npx --version \
+    && yarn --version \
+    # cleanup
+    && rm -rf /root/.npm /tmp/*compile-cache*
+
+USER vscode
 
 CMD ["sleep", "infinity"]
 ENTRYPOINT [""]
