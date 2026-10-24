@@ -13,6 +13,7 @@ RUN apt-get update \
             llvm \
             gdb \
             clang \
+            # Python
             python3-dev \
             xtail \
             software-properties-common \
@@ -26,21 +27,36 @@ RUN apt-get update \
             pydocstyle \
             bandit \
             virtualenv \
+            # Ruby
             rake \
             ruby \
             ruby-dev \
             jekyll \
+            # Go
             golang \
-            yarnpkg \
-            eslint \
-            node-typescript \
+            # Build tools
             buildah \
             skopeo \
+            # For nodejs
+            libatomic1 \
     && apt-get distclean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /entrypoint
 
 USER vscode
+
+# Install most recent node version
+ENV NVM_DIR="$HOME/.nvm"
+RUN curl -q -sI https://github.com/nvm-sh/nvm/releases/latest | \
+      grep -i location | \
+      grep -oP 'tag/\K[^[:space:]\r\n]+' | \
+      xargs -I {} curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{}/install.sh | \
+      bash \
+    && source "${NVM_DIR}/nvm.sh" \
+    && nvm install --latest-npm \
+    && npm config set allow-scripts=yarn --location=user \
+    && npm install -g eslint typescript yarn \
+    && rm -rf "${HOME}/.nvm/.cache" "${HOME}/.npm" /tmp/*
 
 CMD ["sleep", "infinity"]
 ENTRYPOINT [""]
