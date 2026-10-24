@@ -1,5 +1,8 @@
 FROM docker.io/library/node:latest AS node
 
+FROM docker.io/aquasec/trivy:latest AS trivy
+RUN trivy plugin install github.com/fatihtokus/scan2html
+
 FROM quay.io/cyclops-k8s/ansible-kubernetes-devcontainer:latest
 
 USER root
@@ -66,7 +69,14 @@ RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     # cleanup
     && rm -rf /root/.npm /tmp/*compile-cache*
 
+# trivy
+COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=trivy /contrib/*.tpl /contrib/
+
 USER vscode
+
+# trivy
+COPY --from=trivy --chown=vscode:vscode /root/.trivy /home/vscode/.trivy
 
 CMD ["sleep", "infinity"]
 ENTRYPOINT [""]
