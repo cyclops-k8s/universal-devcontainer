@@ -58,6 +58,7 @@ RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npx \
     && npm config set allow-scripts=yarn \
+    && npm config set allow-scripts=esbuild \
     && npm install --global eslint typescript yarn \
     # tests to ensure everything runs
     && eslint --version \
