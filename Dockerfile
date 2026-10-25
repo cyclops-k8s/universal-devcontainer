@@ -57,8 +57,7 @@ COPY --from=node /usr/local/share/man/man1/node.1 /usr/local/share/man/man1/
 RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npx \
-    && npm config set allow-scripts=yarn \
-    && npm config set allow-scripts=esbuild \
+    && npm config set allow-scripts=esbuild,yarn \
     && npm install --global eslint typescript yarn \
     # tests to ensure everything runs
     && eslint --version \
